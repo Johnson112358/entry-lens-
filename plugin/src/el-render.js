@@ -95,6 +95,7 @@
 
   function renderField(f) {
     var label = font(C.fieldLabel, esc(f.label));
+    var sep = f.sep || '：'; // 保留原文分隔符（半角/全角）
     var value = f.value;
     // 值以 提示/警告 等开头 → 前缀标红
     var prefixHit = /^(提示|警告|注意)[:：]?/.exec(value);
@@ -106,7 +107,7 @@
     } else {
       valueHtml = highlightValueInText(value);
     }
-    return label + '：' + valueHtml;
+    return label + sep + valueHtml;
   }
 
   /* ==================================================================== *
@@ -131,10 +132,11 @@
         rarityPart = rarM[0];
       }
       var nameHtml = esc(namePart);
+      var nameIsSentence = /[。！？.!?]$/.test(namePart);
       if (block.rarityColor) {
-        nameHtml = font(block.rarityColor, bold(underline(nameHtml)));
+        nameHtml = font(block.rarityColor, nameIsSentence ? bold(nameHtml) : bold(underline(nameHtml)));
       } else {
-        nameHtml = underline(nameHtml);
+        nameHtml = nameIsSentence ? bold(nameHtml) : underline(nameHtml);
       }
       out.push('【' + nameHtml + esc(rarityPart) + '】');
     }

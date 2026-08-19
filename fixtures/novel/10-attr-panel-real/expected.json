@@ -1,0 +1,25 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "fields": [
+        {
+          "label": "智力",
+          "value": "80（真实属性·主属性）"
+        },
+        {
+          "label": "魅力",
+          "value": "8"
+        },
+        {
+          "label": "幸运",
+          "value": "3"
+        },
+        {
+          "label": "杀戮天赋",
+          "value": "噬灵者（S）"
+        }
+      ]
+    }
+  ]
+}

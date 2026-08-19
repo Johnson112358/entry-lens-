@@ -141,3 +141,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# 测试语料（本地大文件，不入库）
+轮回乐园.txt
+*.txt

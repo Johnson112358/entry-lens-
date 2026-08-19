@@ -1,3 +1,11 @@
 {
-  "blocks": []
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "支线任务：宝藏。",
+      "fields": [],
+      "options": []
+    }
+  ]
 }

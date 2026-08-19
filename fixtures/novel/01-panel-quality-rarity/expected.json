@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "战术皮靴",
+      "rarity": "紫色",
+      "rarityColor": "#9B59B6",
+      "fields": [
+        {
+          "label": "产地",
+          "value": "轮回乐园，第五车间"
+        },
+        {
+          "label": "品质",
+          "value": "紫色"
+        },
+        {
+          "label": "类别",
+          "value": "鞋子（黑色）"
+        },
+        {
+          "label": "耐久度",
+          "value": "59～59"
+        },
+        {
+          "label": "装备需求",
+          "value": "力量15，敏捷17，体质5"
+        }
+      ]
+    }
+  ]
+}

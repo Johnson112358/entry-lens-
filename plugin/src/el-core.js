@@ -23,8 +23,8 @@
     return /[\u4e00-\u9fa5]/.test(s);
   }
 
-  /** 字段行：字段名：值（字段名 1-12 字符，不含【】与冒号） */
-  var FIELD_RE = /^([^:：【】]{1,12})[:：](.+)$/;
+  /** 字段行：字段名：值（字段名 1-12 字符，不含【】与冒号；保留原始分隔符防原文变更） */
+  var FIELD_RE = /^([^:：【】]{1,12})([:：])(.+)$/;
 
   /** 面板结束标记：空行 / …… / 新【】块 */
   function isBlockEndLine(line) {
@@ -63,6 +63,21 @@
       if (str.indexOf(keywords[k]) !== -1) { return true; }
     }
     return false;
+  }
+
+  /** 从文本中解析稀有度（品质字段值："紫色"、"暗紫色"、"金色（传说）"等，最长别名优先） */
+  function parseRarityText(text) {
+    var t = trim(String(text)).replace(/[。．.、，,；;：:]|（[^（）]*）$/g, '');
+    var aliases = CFG.rarity.aliases;
+    var bestKey = null;
+    for (var k in aliases) {
+      if (t.indexOf(k) !== -1 && (bestKey === null || k.length > bestKey.length)) {
+        bestKey = k;
+      }
+    }
+    if (bestKey === null) { return null; }
+    var rarity = aliases[bestKey];
+    return { rarity: rarity, color: CFG.rarity.colors[rarity] || null };
   }
 
   /** 稀有度解析：文本 → {rarity, color} 或 null */
@@ -110,14 +125,7 @@
       r.kind = 'choice';
       return r;
     }
-    // 系统提示（以"提示"等开头，或含系统提示特征词，且行短）
-    if (startsWithAny(inner, CFG.system.promptKeywords) || containsAny(inner, CFG.system.promptHints)) {
-      if (trim(line).length <= CFG.system.promptMaxLength) {
-        r.kind = 'prompt';
-      }
-      return r;
-    }
-    // 纯名称标题：【名称】或【名称（稀有度）】
+    // 纯名称标题：【名称】或【名称（稀有度）】（面板优先，防"欢迎使用…如下。"被提示兜底抢占）
     if (CFG.panel.nameTitleRegex.test(trim(line))) {
       var rar = parseRarity(inner);
       r.kind = 'panel-head';
@@ -130,7 +138,27 @@
       }
       return r;
     }
+    // 系统提示（以"提示"等开头，或含系统提示特征词/标点兜底，且行短）
+    if (isPromptLike(inner, trim(line))) {
+      r.kind = 'prompt';
+      return r;
+    }
     return r; // 其他【】行（含冒号非Lv等）→ plain
+  }
+
+  /** 系统提示判定（关键词 / 特征词 / 标点兜底） */
+  function isPromptLike(inner, line) {
+    if (startsWithAny(inner, CFG.system.promptKeywords) || containsAny(inner, CFG.system.promptHints)) {
+      return line.length <= CFG.system.promptMaxLength;
+    }
+    // 兜底：含标点且足够长的【】行（如"时间到，巨人开始进攻。"）；排除对话式（"他说：…"）与超长行
+    if (line.length <= CFG.system.promptMaxLength && line.length >= CFG.system.promptFallback.minLineLen && !/^(他|她|我|你|他们|她们|你们)[说道问答喊叫]/.test(inner)) {
+      var punct = CFG.system.promptFallback.punct;
+      for (var p = 0; p < punct.length; p++) {
+        if (inner.indexOf(punct.charAt(p)) !== -1) { return true; }
+      }
+    }
+    return false;
   }
 
   /** 任务标题判定：以任务结构词开头，或以"任务"结尾（排除"任务进度更新"等提示形态） */
@@ -147,11 +175,6 @@
     }
     if (/任务$/.test(inner)) { return true; }
     return false;
-  }
-
-  /** 单句说明行（confirm 大框可吞）：以句末标点结尾，≤40 字，不含冒号 */
-  function isSentenceLine(line) {
-    return /^[^:：]{1,40}[。！？!?]$/.test(line);
   }
 
   /* ==================================================================== *
@@ -288,18 +311,34 @@
       for (var ri = 0; ri < rows.length; ri++) {
         var r = rows[ri];
         if (r.kind === 'field') {
-          fields.push({ label: r.label, value: r.value });
+          fields.push({ label: r.label, value: r.value, sep: r.sep });
           rowKinds.push('field');
         } else {
           descLines.push(r.text);
           rowKinds.push('line');
         }
       }
+      // 稀有度：名称后缀（【名称（品质）】）优先；其次从"品质/稀有度"字段值提取（真实语料常见形态）
+      var rarity = cls.rarity;
+      var rarityColor = cls.color;
+      if (!rarity) {
+        for (var fi = 0; fi < fields.length; fi++) {
+          var lbl = fields[fi].label;
+          if (lbl === '品质' || lbl === '稀有度' || lbl === '品级') {
+            var rar2 = parseRarityText(fields[fi].value);
+            if (rar2) {
+              rarity = rar2.rarity;
+              rarityColor = rar2.color;
+              break;
+            }
+          }
+        }
+      }
       return {
         type: 'panel',
         name: (cls.kind === 'skill') ? cls.title : cls.name,
-        rarity: cls.rarity,
-        rarityColor: cls.color,
+        rarity: rarity,
+        rarityColor: rarityColor,
         fields: fields,
         descLines: descLines,
         rowKinds: rowKinds,
@@ -323,7 +362,7 @@
         if (fields.length + options.length + contentLines.length >= CFG.system.maxBlockLines) { break; }
         var fm = FIELD_RE.exec(line);
         if (fm) {
-          fields.push({ label: trim(fm[1]), value: trim(fm[2]) });
+          fields.push({ label: trim(fm[1]), value: trim(fm[3]), sep: fm[2] });
           rowKinds.push('field');
         } else if (isOptionLine(line)) {
           options.push(line);
@@ -331,10 +370,6 @@
         } else if (isYesNoLine(line)) {
           options.push(line);
           rowKinds.push('option');
-        } else if (kind === 'confirm' && contentLines.length < 2 && isSentenceLine(line)) {
-          // confirm 允许吞入少量"单句说明行"（是/否确认的说明文字）
-          contentLines.push(line);
-          rowKinds.push('line');
         } else {
           break; // 普通叙述行：结束大框
         }
@@ -374,7 +409,7 @@
             if (rows.length >= CFG.panel.maxFieldLines) { break; }
             var m2 = FIELD_RE.exec(l2);
             if (m2) {
-              rows.push({ kind: 'field', label: trim(m2[1]), value: trim(m2[2]) });
+              rows.push({ kind: 'field', label: trim(m2[1]), value: trim(m2[3]), sep: m2[2] });
             } else {
               rows.push({ kind: 'line', text: l2 });
             }
@@ -390,7 +425,21 @@
               i = j2;
               continue;
             }
-            i++; // 字段不足 → 降级普通行
+            // 字段不足 → 回退：符合提示特征 → 单行提示框，否则普通行
+            if (isPromptLike(cls.title, line)) {
+              blocks.push({
+                type: 'system',
+                subType: 'prompt',
+                title: cls.title,
+                fields: [],
+                options: [],
+                lines: [],
+                rowKinds: [],
+                startLine: i,
+                endLine: i
+              });
+            }
+            i++;
             continue;
           }
 
@@ -419,7 +468,21 @@
             blocks.push(collected.block);
             i = collected.endIdx;
           } else {
-            i++; // 降级
+            // 降级：仍符合提示特征（如"【是/否支付1000乐园币…。】"单行确认）→ 单行提示框
+            if (isPromptLike(cls.title, line)) {
+              blocks.push({
+                type: 'system',
+                subType: 'prompt',
+                title: cls.title,
+                fields: [],
+                options: [],
+                lines: [],
+                rowKinds: [],
+                startLine: i,
+                endLine: i
+              });
+            }
+            i++;
           }
           continue;
         }
@@ -461,7 +524,7 @@
             if (!m2) { break; }
             seen++;
             if (ATTR_WORD_SET[trim(m2[1])]) { hitCount++; }
-            attrFields.push({ label: trim(m2[1]), value: trim(m2[2]) });
+            attrFields.push({ label: trim(m2[1]), value: trim(m2[3]), sep: m2[2] });
             if (seen >= CFG.panel.maxFieldLines) { j++; break; }
             j++;
           }

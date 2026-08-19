@@ -59,11 +59,12 @@ function deepEqual(a, b) {
   return false;
 }
 
-/** 归一化解析结果为可比结构（忽略行号/渲染细节） */
+/** 归一化解析结果为可比结构（忽略行号/渲染细节/分隔符） */
 function normalizeBlocks(blocks) {
+  const normFields = (fields) => fields.map((f) => ({ label: f.label, value: f.value }));
   return blocks.map((b) => {
     if (b.type === 'panel') {
-      const o = { type: 'panel', fields: b.fields };
+      const o = { type: 'panel', fields: normFields(b.fields) };
       if (b.name !== null && b.name !== undefined) { o.name = b.name; }
       if (b.rarity) { o.rarity = b.rarity; }
       if (b.rarityColor) { o.rarityColor = b.rarityColor; }
@@ -74,7 +75,7 @@ function normalizeBlocks(blocks) {
         type: 'system',
         subType: b.subType,
         title: b.title,
-        fields: b.fields,
+        fields: normFields(b.fields),
         options: b.options
       };
     }

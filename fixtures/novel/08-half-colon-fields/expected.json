@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "fields": [
+        {
+          "label": "力量",
+          "value": "D(最高A)。"
+        },
+        {
+          "label": "敏捷",
+          "value": "(最高A)。"
+        },
+        {
+          "label": "体力",
+          "value": "D(最高A)。"
+        }
+      ]
+    }
+  ]
+}

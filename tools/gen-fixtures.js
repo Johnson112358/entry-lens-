@@ -400,21 +400,22 @@ CASES.push(
     cat: 'system-block', name: '10-confirm-seal',
     input: '【是否启动「超·界级封禁术式」。】\n此术式将封印整个副本区域，持续30分钟。\n是/否',
     expected: {
-      blocks: [{ type: 'system', subType: 'confirm', title: '是否启动「超·界级封禁术式」。', fields: [], options: ['是/否'] }]
+      // 说明行不吞并（防叙述污染），单行确认降级为提示框
+      blocks: [{ type: 'system', subType: 'prompt', title: '是否启动「超·界级封禁术式」。', fields: [], options: [] }]
     }
   },
   {
     cat: 'system-block', name: '11-confirm-revive',
     input: '【确认消耗1000金币复活？】\n复活后将在安全区重生。\n是/否',
     expected: {
-      blocks: [{ type: 'system', subType: 'confirm', title: '确认消耗1000金币复活？', fields: [], options: ['是/否'] }]
+      blocks: [{ type: 'system', subType: 'prompt', title: '确认消耗1000金币复活？', fields: [], options: [] }]
     }
   },
   {
     cat: 'system-block', name: '12-confirm-potion',
     input: '【激活「龙血药剂」？】\n饮用后生命值上限永久+500。\n是/否',
     expected: {
-      blocks: [{ type: 'system', subType: 'confirm', title: '激活「龙血药剂」？', fields: [], options: ['是/否'] }]
+      blocks: [{ type: 'system', subType: 'prompt', title: '激活「龙血药剂」？', fields: [], options: [] }]
     }
   },
   {
@@ -466,12 +467,14 @@ CASES.push(
   {
     cat: 'system-block', name: 'neg-02-quest-empty',
     input: '【支线任务：宝藏。】',
-    expected: { blocks: [] }
+    // 单行任务发布：无后续字段时降级为提示框
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '支线任务：宝藏。', fields: [], options: [] }] }
   },
   {
     cat: 'system-block', name: 'neg-03-confirm-empty',
     input: '【确认删除存档？】',
-    expected: { blocks: [] }
+    // 单行确认：无后续行时降级为提示框
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '确认删除存档？', fields: [], options: [] }] }
   },
   {
     cat: 'system-block', name: 'neg-04-quote',
@@ -682,7 +685,8 @@ CASES.push(
   {
     cat: 'negative', name: '09-long-bracket',
     input: '【本章内容较为复杂，包含大量背景设定与人物关系梳理，以及世界观补充说明，故篇幅较长。】',
-    expected: { blocks: [] }
+    // 作者注式【】说明句：形态与系统提示一致，按提示框处理（可接受）
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '本章内容较为复杂，包含大量背景设定与人物关系梳理，以及世界观补充说明，故篇幅较长。', fields: [], options: [] }] }
   },
   {
     cat: 'negative', name: '10-tel-number',
@@ -741,6 +745,84 @@ CASES.push(
     cat: 'mixed', name: '04-no-enhancement',
     input: '清晨的阳光洒进窗台。\n他伸了个懒腰，想起昨晚的梦。\n梦里有一只巨大的鲸鱼，在云海中遨游。\n“真是个奇怪的梦。”他自言自语道。',
     expected: { blocks: [] }
+  }
+);
+
+/* ---------------- novel：真实语料样例（《轮回乐园》摘录，v0.1.1 调优后） ---------------- */
+
+CASES.push(
+  {
+    cat: 'novel', name: '01-panel-quality-rarity',
+    input: '【战术皮靴】\n产地：轮回乐园，第五车间\n品质：紫色\n类别：鞋子（黑色）\n耐久度：59～59\n装备需求：力量15，敏捷17，体质5',
+    expected: {
+      // 稀有度从"品质"字段提取（名称无（品质）后缀）
+      blocks: [{ type: 'panel', name: '战术皮靴', rarity: '紫色', rarityColor: '#9B59B6', fields: [
+        { label: '产地', value: '轮回乐园，第五车间' }, { label: '品质', value: '紫色' }, { label: '类别', value: '鞋子（黑色）' }, { label: '耐久度', value: '59～59' }, { label: '装备需求', value: '力量15，敏捷17，体质5' }
+      ] }]
+    }
+  },
+  {
+    cat: 'novel', name: '02-panel-welcome',
+    input: '【欢迎使用属性强化仓，你的裸装属性如下。】\n力量：29\n敏捷：28\n体力：18\n智力：28\n魅力：3',
+    expected: {
+      blocks: [{ type: 'panel', name: '欢迎使用属性强化仓，你的裸装属性如下。', fields: [
+        { label: '力量', value: '29' }, { label: '敏捷', value: '28' }, { label: '体力', value: '18' }, { label: '智力', value: '28' }, { label: '魅力', value: '3' }
+      ] }]
+    }
+  },
+  {
+    cat: 'novel', name: '03-prompt-fallback',
+    input: '【时间到，巨人开始进攻。】',
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '时间到，巨人开始进攻。', fields: [], options: [] }] }
+  },
+  {
+    cat: 'novel', name: '04-prompt-fallback-num',
+    input: '【蓝色宝箱×42。】',
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '蓝色宝箱×42。', fields: [], options: [] }] }
+  },
+  {
+    cat: 'novel', name: '05-prompt-transfer',
+    input: '【身体传输中……】',
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '身体传输中……', fields: [], options: [] }] }
+  },
+  {
+    cat: 'novel', name: '06-skill-lowercase',
+    input: '【刀术大师：lv.10.（被动）】\n刀类武器伤害+15%，攻击速度+8%。',
+    expected: {
+      blocks: [{ type: 'panel', name: '刀术大师：lv.10.（被动）', fields: [] }]
+    }
+  },
+  {
+    cat: 'novel', name: '07-confirm-single',
+    input: '【是/否支付1000乐园币激活0182号强化仓。】\n苏晓站在一间真实属性强化仓前，支付1000乐园币后，属性强化仓开启。',
+    expected: {
+      // 单行确认降级为提示框；叙述行留在框外
+      blocks: [{ type: 'system', subType: 'prompt', title: '是/否支付1000乐园币激活0182号强化仓。', fields: [], options: [] }]
+    }
+  },
+  {
+    cat: 'novel', name: '08-half-colon-fields',
+    input: '力量:D(最高A)。\n敏捷:(最高A)。\n体力:D(最高A)。',
+    expected: {
+      // 半角冒号分隔符：解析为属性面板，渲染时保留半角冒号（原文不丢）
+      blocks: [{ type: 'panel', fields: [
+        { label: '力量', value: 'D(最高A)。' }, { label: '敏捷', value: '(最高A)。' }, { label: '体力', value: 'D(最高A)。' }
+      ] }]
+    }
+  },
+  {
+    cat: 'novel', name: '09-prompt-ranking',
+    input: '【第一名：白夜，攻防贡献值1650.】',
+    expected: { blocks: [{ type: 'system', subType: 'prompt', title: '第一名：白夜，攻防贡献值1650.', fields: [], options: [] }] }
+  },
+  {
+    cat: 'novel', name: '10-attr-panel-real',
+    input: '智力：80（真实属性·主属性）\n魅力：8\n幸运：3\n杀戮天赋：噬灵者（S）',
+    expected: {
+      blocks: [{ type: 'panel', fields: [
+        { label: '智力', value: '80（真实属性·主属性）' }, { label: '魅力', value: '8' }, { label: '幸运', value: '3' }, { label: '杀戮天赋', value: '噬灵者（S）' }
+      ] }]
+    }
   }
 );
 
