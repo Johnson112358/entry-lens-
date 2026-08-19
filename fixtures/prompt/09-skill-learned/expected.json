@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "你学会了新技能：冲锋。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

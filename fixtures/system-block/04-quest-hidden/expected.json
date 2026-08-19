@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "隐藏任务：寻找失落遗迹。",
+      "fields": [
+        {
+          "label": "地点",
+          "value": "迷雾森林"
+        },
+        {
+          "label": "提示",
+          "value": "小心机关陷阱"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "主线任务：讨伐魔王。",
+      "fields": [
+        {
+          "label": "目标",
+          "value": "击败魔王"
+        },
+        {
+          "label": "难度",
+          "value": "SSS"
+        },
+        {
+          "label": "奖励",
+          "value": "金币×10000"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

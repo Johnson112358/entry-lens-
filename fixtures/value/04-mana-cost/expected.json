@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "消耗魔力",
+          "sign": "-",
+          "raw": "-30"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "HP",
+          "sign": "-",
+          "raw": "-100"
+        }
+      ]
+    }
+  ]
+}

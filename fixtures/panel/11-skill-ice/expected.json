@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "冰霜新星：Lv.3（控制）",
+      "fields": [
+        {
+          "label": "冷却时间",
+          "value": "25秒"
+        }
+      ]
+    }
+  ]
+}

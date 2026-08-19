@@ -1,0 +1,29 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "fields": [
+        {
+          "label": "生命值",
+          "value": "100/100"
+        },
+        {
+          "label": "法力值",
+          "value": "50/50"
+        },
+        {
+          "label": "力量",
+          "value": "12"
+        },
+        {
+          "label": "敏捷",
+          "value": "15"
+        },
+        {
+          "label": "体质",
+          "value": "10"
+        }
+      ]
+    }
+  ]
+}

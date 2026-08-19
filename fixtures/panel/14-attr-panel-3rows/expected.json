@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "fields": [
+        {
+          "label": "体力",
+          "value": "80/80"
+        },
+        {
+          "label": "精力",
+          "value": "60/60"
+        },
+        {
+          "label": "幸运",
+          "value": "7"
+        }
+      ]
+    }
+  ]
+}

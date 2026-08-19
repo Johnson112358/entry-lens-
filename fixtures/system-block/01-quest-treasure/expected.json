@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "支线任务：宝藏。",
+      "fields": [
+        {
+          "label": "难度等级",
+          "value": "Lv.？？？"
+        },
+        {
+          "label": "目标",
+          "value": "击败守宝者"
+        },
+        {
+          "label": "奖励",
+          "value": "金币×500"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

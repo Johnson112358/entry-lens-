@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "恢复法力",
+          "sign": "+",
+          "raw": "+40"
+        }
+      ]
+    }
+  ]
+}

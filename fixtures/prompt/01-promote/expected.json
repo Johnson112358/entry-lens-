@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "提示：你已晋升至绝强者。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

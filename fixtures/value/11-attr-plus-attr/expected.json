@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "攻击力",
+          "sign": "+",
+          "raw": "+10"
+        }
+      ]
+    }
+  ]
+}

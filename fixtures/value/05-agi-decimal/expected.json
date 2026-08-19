@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "敏捷",
+          "sign": "+",
+          "raw": "+3.5"
+        }
+      ]
+    }
+  ]
+}

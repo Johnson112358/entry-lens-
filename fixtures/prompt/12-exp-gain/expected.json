@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "获得经验+500，金币+100。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

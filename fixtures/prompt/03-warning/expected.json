@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "警告：前方区域危险，请谨慎前进。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

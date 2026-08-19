@@ -1,0 +1,25 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "fields": [
+        {
+          "label": "攻击力",
+          "value": "120"
+        },
+        {
+          "label": "防御力",
+          "value": "85"
+        },
+        {
+          "label": "移动速度",
+          "value": "3.2"
+        },
+        {
+          "label": "暴击伤害",
+          "value": "150%"
+        }
+      ]
+    }
+  ]
+}

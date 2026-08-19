@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "你的烙印等级上限提升至Lv.95。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

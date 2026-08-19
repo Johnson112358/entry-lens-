@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "秘银护腕",
+      "rarity": "蓝色",
+      "rarityColor": "#4A90D9",
+      "fields": [
+        {
+          "label": "装备等级",
+          "value": "30"
+        },
+        {
+          "label": "防御力",
+          "value": "45"
+        },
+        {
+          "label": "魔抗",
+          "value": "28"
+        },
+        {
+          "label": "暴击率",
+          "value": "3%"
+        },
+        {
+          "label": "套装效果",
+          "value": "秘银套（2/3）激活"
+        }
+      ]
+    }
+  ]
+}

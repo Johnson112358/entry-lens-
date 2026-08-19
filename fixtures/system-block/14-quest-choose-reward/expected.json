@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "choice",
+      "title": "任务完成！请选择奖励",
+      "fields": [],
+      "options": [
+        "A. 经验+500",
+        "B. 金币×1000"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "confirm",
+      "title": "确认消耗1000金币复活？",
+      "fields": [],
+      "options": [
+        "是/否"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "支线任务：深入矿洞。",
+      "fields": [
+        {
+          "label": "难度等级",
+          "value": "B"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

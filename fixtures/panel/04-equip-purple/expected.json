@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "幽影法袍",
+      "rarity": "紫色",
+      "rarityColor": "#9B59B6",
+      "fields": [
+        {
+          "label": "品质",
+          "value": "史诗"
+        },
+        {
+          "label": "法术强度",
+          "value": "+35"
+        },
+        {
+          "label": "法力值",
+          "value": "+200"
+        },
+        {
+          "label": "冷却缩减",
+          "value": "10%"
+        },
+        {
+          "label": "被动效果",
+          "value": "施法后30%概率返还消耗"
+        }
+      ]
+    }
+  ]
+}

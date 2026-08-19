@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "系统提示：背包空间不足，请及时清理。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

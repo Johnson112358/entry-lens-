@@ -1,0 +1,28 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "龙鳞战甲",
+      "rarity": "橙色",
+      "rarityColor": "#E67E22",
+      "fields": [
+        {
+          "label": "防御力",
+          "value": "120"
+        },
+        {
+          "label": "生命值",
+          "value": "+800"
+        },
+        {
+          "label": "火抗",
+          "value": "+40"
+        },
+        {
+          "label": "套装效果",
+          "value": "龙威（3/3）"
+        }
+      ]
+    }
+  ]
+}

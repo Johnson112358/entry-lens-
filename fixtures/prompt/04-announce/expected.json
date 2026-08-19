@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "公告：服务器将于23:00进行例行维护。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

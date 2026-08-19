@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "猎杀狼王任务",
+      "fields": [
+        {
+          "label": "目标",
+          "value": "击败狼王"
+        },
+        {
+          "label": "奖励",
+          "value": "狼王皮×1"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

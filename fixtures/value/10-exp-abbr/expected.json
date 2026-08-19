@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "EXP",
+          "sign": "+",
+          "raw": "+100"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "confirm",
+      "title": "激活「龙血药剂」？",
+      "fields": [],
+      "options": [
+        "是/否"
+      ]
+    }
+  ]
+}

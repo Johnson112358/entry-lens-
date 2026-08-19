@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "经验",
+          "sign": "+",
+          "raw": "+200"
+        }
+      ]
+    }
+  ]
+}

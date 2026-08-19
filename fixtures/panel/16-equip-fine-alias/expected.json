@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "铁质短刀",
+      "rarity": "绿色",
+      "rarityColor": "#2ECC71",
+      "fields": [
+        {
+          "label": "攻击力",
+          "value": "12~18"
+        },
+        {
+          "label": "攻击速度",
+          "value": "1.4"
+        },
+        {
+          "label": "售价",
+          "value": "85金币"
+        }
+      ]
+    }
+  ]
+}

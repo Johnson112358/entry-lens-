@@ -1,0 +1,22 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "confirm",
+      "title": "是/否接受任务「猎杀狼王」？",
+      "fields": [
+        {
+          "label": "任务等级",
+          "value": "B"
+        },
+        {
+          "label": "奖励",
+          "value": "狼王皮×1"
+        }
+      ],
+      "options": [
+        "是/否"
+      ]
+    }
+  ]
+}

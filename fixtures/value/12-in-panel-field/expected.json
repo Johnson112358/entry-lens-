@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "圣光护盾",
+      "rarity": "绿色",
+      "rarityColor": "#2ECC71",
+      "fields": [
+        {
+          "label": "护盾值",
+          "value": "+500 生命"
+        },
+        {
+          "label": "持续时间",
+          "value": "10秒"
+        }
+      ]
+    }
+  ]
+}

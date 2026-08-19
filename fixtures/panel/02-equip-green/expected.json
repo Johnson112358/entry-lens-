@@ -1,0 +1,32 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "精铁长剑",
+      "rarity": "绿色",
+      "rarityColor": "#2ECC71",
+      "fields": [
+        {
+          "label": "品质",
+          "value": "精良"
+        },
+        {
+          "label": "攻击力",
+          "value": "15~22"
+        },
+        {
+          "label": "耐久度",
+          "value": "80/80"
+        },
+        {
+          "label": "重量",
+          "value": "2.5kg"
+        },
+        {
+          "label": "售价",
+          "value": "120金币"
+        }
+      ]
+    }
+  ]
+}

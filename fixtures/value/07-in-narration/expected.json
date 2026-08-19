@@ -1,0 +1,19 @@
+{
+  "blocks": [
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "力量",
+          "sign": "+",
+          "raw": "+5"
+        },
+        {
+          "attr": "HP",
+          "sign": "-",
+          "raw": "-30"
+        }
+      ]
+    }
+  ]
+}

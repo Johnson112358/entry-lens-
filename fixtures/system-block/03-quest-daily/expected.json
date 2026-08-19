@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "每日任务：采集草药。",
+      "fields": [
+        {
+          "label": "进度",
+          "value": "0/5"
+        },
+        {
+          "label": "奖励",
+          "value": "经验×200"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "火球术：Lv.5（主动）",
+      "fields": [
+        {
+          "label": "冷却时间",
+          "value": "10秒"
+        },
+        {
+          "label": "消耗法力",
+          "value": "30"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "无名短弓",
+      "fields": [
+        {
+          "label": "攻击力",
+          "value": "8~12"
+        },
+        {
+          "label": "射程",
+          "value": "30米"
+        },
+        {
+          "label": "重量",
+          "value": "1.2kg"
+        }
+      ]
+    }
+  ]
+}

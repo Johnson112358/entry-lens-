@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "获得称号：屠龙者。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "等级提升！当前等级：Lv.32",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

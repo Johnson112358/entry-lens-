@@ -1,0 +1,36 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "兽皮靴",
+      "rarity": "白色",
+      "rarityColor": "#C0C0C0",
+      "fields": [
+        {
+          "label": "防御力",
+          "value": "5"
+        },
+        {
+          "label": "移动速度",
+          "value": "+1"
+        }
+      ]
+    },
+    {
+      "type": "panel",
+      "name": "狼牙项链",
+      "rarity": "绿色",
+      "rarityColor": "#2ECC71",
+      "fields": [
+        {
+          "label": "攻击力",
+          "value": "+6"
+        },
+        {
+          "label": "暴击率",
+          "value": "2%"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "骑士头盔",
+      "rarity": "橙色",
+      "rarityColor": "#E67E22",
+      "fields": [
+        {
+          "label": "防御力",
+          "value": "60"
+        },
+        {
+          "label": "耐久度",
+          "value": "45/45"
+        }
+      ]
+    }
+  ]
+}

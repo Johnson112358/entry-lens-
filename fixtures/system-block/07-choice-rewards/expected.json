@@ -1,0 +1,15 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "choice",
+      "title": "你可在以下奖励中做出选择",
+      "fields": [],
+      "options": [
+        "A. 精铁长剑（绿色）",
+        "B. 秘银护腕（蓝色）",
+        "C. 金币×500"
+      ]
+    }
+  ]
+}

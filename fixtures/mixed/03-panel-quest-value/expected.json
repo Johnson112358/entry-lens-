@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "支线任务：宝藏。",
+      "fields": [
+        {
+          "label": "难度等级",
+          "value": "Lv.？？？"
+        },
+        {
+          "label": "目标",
+          "value": "击败守宝者"
+        }
+      ],
+      "options": []
+    },
+    {
+      "type": "value",
+      "changes": [
+        {
+          "attr": "力量",
+          "sign": "+",
+          "raw": "+5"
+        },
+        {
+          "attr": "经验",
+          "sign": "+",
+          "raw": "+200"
+        }
+      ]
+    },
+    {
+      "type": "system",
+      "subType": "choice",
+      "title": "你可在以下奖励中做出选择",
+      "fields": [],
+      "options": [
+        "A. 精铁长剑（绿色）",
+        "B. 金币×500"
+      ]
+    }
+  ]
+}

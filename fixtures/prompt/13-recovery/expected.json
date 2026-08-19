@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "你的伤势已恢复，生命值回满。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

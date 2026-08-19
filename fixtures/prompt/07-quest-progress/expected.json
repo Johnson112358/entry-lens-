@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "任务进度更新：击杀野狼 3/10。",
+      "fields": [],
+      "options": []
+    }
+  ]
+}

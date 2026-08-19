@@ -1,0 +1,13 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "confirm",
+      "title": "是否启动「超·界级封禁术式」。",
+      "fields": [],
+      "options": [
+        "是/否"
+      ]
+    }
+  ]
+}

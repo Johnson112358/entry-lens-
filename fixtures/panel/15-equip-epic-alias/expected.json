@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    {
+      "type": "panel",
+      "name": "星辉法杖",
+      "rarity": "紫色",
+      "rarityColor": "#9B59B6",
+      "fields": [
+        {
+          "label": "法术强度",
+          "value": "+80"
+        },
+        {
+          "label": "法力值",
+          "value": "+300"
+        },
+        {
+          "label": "施法速度",
+          "value": "+15%"
+        }
+      ]
+    }
+  ]
+}
