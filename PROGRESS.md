@@ -59,6 +59,12 @@
 ### 当前卡点
 - 无代码卡点。**待办（需用户执行）**：真机冒烟（docs/INSTALL.md §5）——Node 侧已全绿，Rhino 真机行为需用户验证后反馈调优。
 
+### 勘误与补充（用户反馈后修正）
+- **D2（2026-08-21，用户反馈）**：INSTALL.md 原写的"我的 → 设置 → 阅读设置"路径不存在。源码确认：
+  - "适配特殊样式"开关实际位置：**阅读页 → 点屏幕中央 → 底部菜单 → 齿轮"设置"按钮 → 弹出的设置列表**（`MoreConfigDialog` 加载 `pref_config_read.xml`，位于"中文排版/两端对齐/底部对齐"之后）。
+  - 该开关 **defaultValue=true（默认开启）**；书籍"启用替换规则"对网络小说也默认开启（`replaceEnableDefault=true`，图片书源/epub 除外）。→ INSTALL.md 2.2 已改为"默认开启，仅关过才需检查"，并新增 §2.4 排障表。
+  - 证据：`res/xml/pref_config_read.xml`、`ui/book/read/config/MoreConfigDialog.kt`、`AppConfig.kt`、`Book.kt`。
+
 ### 下一步（P1 第二批）
 1. 真机冒烟反馈 → 调优识别规则（误报/漏报入样例集）
 2. I9 稀有度颜色自定义 UI / I10 UI 预设 / I11 动效开关（需评估 Legado 新版本能力）
