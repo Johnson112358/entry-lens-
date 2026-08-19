@@ -97,7 +97,10 @@ render: {
 panelHr: 1,
 systemHr: 1,
 entryUnderline: 1,
-valueBold: 1
+valueBold: 1,
+smallPanel: 1,
+smallSystem: 1,
+systemTitleNormal: 1
 }
 };
 if (typeof module !== 'undefined' && module.exports) {
@@ -634,6 +637,9 @@ return '<b>' + innerHtml + '</b>';
 function underline(innerHtml) {
 return '<u>' + innerHtml + '</u>';
 }
+function small(innerHtml) {
+return '<small>' + innerHtml + '</small>';
+}
 function hr() {
 return '<hr>';
 }
@@ -711,14 +717,20 @@ out.push('【' + nameHtml + esc(rarityPart) + '】');
 }
 var fi = 0;
 var li = 0;
+var body = [];
 for (var k = 0; k < rowKinds.length; k++) {
-if (k === 0 && block.name !== null && block.name !== undefined) { out.push('<br>'); }
+if (k === 0 && block.name !== null && block.name !== undefined) { body.push('<br>'); }
 if (rowKinds[k] === 'field') {
-out.push(renderField(block.fields[fi++]));
+body.push(renderField(block.fields[fi++]));
 } else {
-out.push(esc(block.descLines[li++]));
+body.push(esc(block.descLines[li++]));
 }
-if (k < rowKinds.length - 1) { out.push('<br>'); }
+if (k < rowKinds.length - 1) { body.push('<br>'); }
+}
+if (CFG.render.smallPanel && body.length > 0) {
+out.push(small(body.join('')));
+} else {
+out.push(body.join(''));
 }
 if (CFG.render.panelHr) { out.push(hr()); }
 return useHtml(out.join(''));
@@ -736,7 +748,8 @@ html = esc(inner);
 }
 var out = [];
 if (CFG.render.systemHr) { out.push(hr()); }
-out.push('【' + html + '】'); // 原文【】保留
+var box = '【' + html + '】'; // 原文【】保留
+out.push(CFG.render.smallSystem ? small(box) : box);
 if (CFG.render.systemHr) { out.push(hr()); }
 return useHtml(out.join(''));
 }
@@ -756,20 +769,27 @@ var out = [];
 if (CFG.render.systemHr) { out.push(hr()); }
 var titleLine = trim(lines[block.startLine]);
 out.push(font(C.title, bold(esc(titleLine))));
-out.push('\n');
 var fi = 0;
 var oi = 0;
 var li = 0;
+var body = [];
 for (var k = 0; k < block.rowKinds.length; k++) {
 var kind = block.rowKinds[k];
 if (kind === 'field') {
-out.push(renderField(block.fields[fi++]));
+body.push(renderField(block.fields[fi++]));
 } else if (kind === 'option') {
-out.push(renderOptionLine(block.options[oi++]));
+body.push(renderOptionLine(block.options[oi++]));
 } else {
-out.push(esc(block.lines[li++]));
+body.push(esc(block.lines[li++]));
 }
-if (k < block.rowKinds.length - 1) { out.push('<br>'); }
+if (k < block.rowKinds.length - 1) { body.push('<br>'); }
+}
+if (CFG.render.smallSystem && body.length > 0) {
+out.push('<br>');
+out.push(small(body.join('')));
+} else {
+out.push('<br>');
+out.push(body.join(''));
 }
 if (CFG.render.systemHr) { out.push(hr()); }
 return useHtml(out.join(''));

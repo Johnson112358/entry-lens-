@@ -158,13 +158,18 @@
      * 渲染结构参数                                                        *
      * ------------------------------------------------------------------ */
     render: {
-      // 面板/大框上下分隔线（<hr>），1=开 0=关
+      // 面板/大框上下分隔线（<hr>）。注：Legado 3.26.071522+ 渲染 hr，更早版本无效果（无害）
       panelHr: 1,
       systemHr: 1,
       // 面板名称入口：无稀有度时是否加下划线（PRD：正文样式+下划线）
       entryUnderline: 1,
       // 数值高亮加粗
-      valueBold: 1
+      valueBold: 1,
+      // 面板/提示/大框内容字号缩小（<small>，RelativeSizeSpan 0.8，全版本生效）
+      smallPanel: 1,
+      smallSystem: 1,
+      // 大框标题行不缩小（保持视觉层级）
+      systemTitleNormal: 1
     }
   };
 

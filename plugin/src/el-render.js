@@ -43,6 +43,10 @@
     return '<u>' + innerHtml + '</u>';
   }
 
+  function small(innerHtml) {
+    return '<small>' + innerHtml + '</small>';
+  }
+
   function hr() {
     return '<hr>';
   }
@@ -147,16 +151,23 @@
     }
 
     // 内容行按原始行序渲染（rowKinds 保序）：字段行分级 + 描述行原样；行间 <br> 换行
+    // 内容整体 <small> 缩小字号（名称行保持正常字号突出）
     var fi = 0;
     var li = 0;
+    var body = [];
     for (var k = 0; k < rowKinds.length; k++) {
-      if (k === 0 && block.name !== null && block.name !== undefined) { out.push('<br>'); }
+      if (k === 0 && block.name !== null && block.name !== undefined) { body.push('<br>'); }
       if (rowKinds[k] === 'field') {
-        out.push(renderField(block.fields[fi++]));
+        body.push(renderField(block.fields[fi++]));
       } else {
-        out.push(esc(block.descLines[li++]));
+        body.push(esc(block.descLines[li++]));
       }
-      if (k < rowKinds.length - 1) { out.push('<br>'); }
+      if (k < rowKinds.length - 1) { body.push('<br>'); }
+    }
+    if (CFG.render.smallPanel && body.length > 0) {
+      out.push(small(body.join('')));
+    } else {
+      out.push(body.join(''));
     }
 
     if (CFG.render.panelHr) { out.push(hr()); }
@@ -180,7 +191,8 @@
     }
     var out = [];
     if (CFG.render.systemHr) { out.push(hr()); }
-    out.push('【' + html + '】'); // 原文【】保留
+    var box = '【' + html + '】'; // 原文【】保留
+    out.push(CFG.render.smallSystem ? small(box) : box);
     if (CFG.render.systemHr) { out.push(hr()); }
     return useHtml(out.join(''));
   }
@@ -207,25 +219,32 @@
     var out = [];
     if (CFG.render.systemHr) { out.push(hr()); }
 
-    // 标题行（原文整行保留，加粗高亮）
+    // 标题行（原文整行保留，加粗高亮；不缩小以保持层级）
     var titleLine = trim(lines[block.startLine]);
     out.push(font(C.title, bold(esc(titleLine))));
-    out.push('\n');
 
-    // 后续行按原始行序渲染（rowKinds 保序）；行间 <br> 换行
+    // 后续行按原始行序渲染（rowKinds 保序）；行间 <br> 换行；内容整体 <small> 缩小字号
     var fi = 0;
     var oi = 0;
     var li = 0;
+    var body = [];
     for (var k = 0; k < block.rowKinds.length; k++) {
       var kind = block.rowKinds[k];
       if (kind === 'field') {
-        out.push(renderField(block.fields[fi++]));
+        body.push(renderField(block.fields[fi++]));
       } else if (kind === 'option') {
-        out.push(renderOptionLine(block.options[oi++]));
+        body.push(renderOptionLine(block.options[oi++]));
       } else {
-        out.push(esc(block.lines[li++]));
+        body.push(esc(block.lines[li++]));
       }
-      if (k < block.rowKinds.length - 1) { out.push('<br>'); }
+      if (k < block.rowKinds.length - 1) { body.push('<br>'); }
+    }
+    if (CFG.render.smallSystem && body.length > 0) {
+      out.push('<br>');
+      out.push(small(body.join('')));
+    } else {
+      out.push('<br>');
+      out.push(body.join(''));
     }
 
     if (CFG.render.systemHr) { out.push(hr()); }
