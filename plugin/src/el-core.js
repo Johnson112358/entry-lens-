@@ -44,6 +44,13 @@
     return CFG.system.yesNoLineRegex.test(line);
   }
 
+  /** 任务短名称行（quest 可吞）：≤16 字、无标点、非人称主语开头（"左大臣的藏品"） */
+  function isShortNameLine(line) {
+    if (!/^[^:：。，！？!?…、；;]{2,16}$/.test(line)) { return false; }
+    if (/^(他|她|我|你|他们|她们|你们|苏晓|林风)/.test(line)) { return false; }
+    return true;
+  }
+
   /** 在数组中查（indexOf 包装） */
   function inArray(arr, v) {
     return arr.indexOf(v) !== -1;
@@ -65,7 +72,7 @@
     return false;
   }
 
-  /** 从文本中解析稀有度（品质字段值："紫色"、"暗紫色"、"金色（传说）"等，最长别名优先） */
+  /** 从文本中解析稀有度（品质字段值："紫色"、"暗紫色"、"金色（传说）"等，最长别名优先；支持"白色?稀有"拆段） */
   function parseRarityText(text) {
     var t = trim(String(text)).replace(/[。．.、，,；;：:]|（[^（）]*）$/g, '');
     var aliases = CFG.rarity.aliases;
@@ -75,22 +82,27 @@
         bestKey = k;
       }
     }
-    if (bestKey === null) { return null; }
-    var rarity = aliases[bestKey];
-    return { rarity: rarity, color: CFG.rarity.colors[rarity] || null };
+    if (bestKey !== null) {
+      var rarity = aliases[bestKey];
+      return { rarity: rarity, color: CFG.rarity.colors[rarity] || null };
+    }
+    // 拆段匹配（"白色?稀有" → 取第一段）
+    var parts = t.split(/[？?、，,·~～]/);
+    for (var p = 0; p < parts.length; p++) {
+      var a = aliases[parts[p]];
+      if (a) {
+        return { rarity: a, color: CFG.rarity.colors[a] || null };
+      }
+    }
+    return null;
   }
 
-  /** 稀有度解析：文本 → {rarity, color} 或 null */
+  /** 稀有度解析：文本 → {rarity, color} 或 null（括号后缀形态：【名称（品质）】） */
   function parseRarity(text) {
     // 提取末尾括号：xxx（白色）
     var m = /（([^（）]{1,6})）$/.exec(trim(text));
     if (!m) { return null; }
-    var alias = CFG.rarity.aliases[m[1]];
-    if (!alias) { return null; }
-    return {
-      rarity: alias,
-      color: CFG.rarity.colors[alias] || null
-    };
+    return parseRarityText(m[1]);
   }
 
   /* ==================================================================== *
@@ -161,19 +173,21 @@
     return false;
   }
 
-  /** 任务标题判定：以任务结构词开头，或以"任务"结尾（排除"任务进度更新"等提示形态） */
+  /** 任务标题判定：以任务结构词开头，或以"任务"结尾（排除"任务进度更新"等提示形态；支持"触发"前缀） */
   function isQuestTitle(inner) {
+    var t = inner;
+    if (t.indexOf('触发') === 0) { t = t.slice(2); }
     var qk = CFG.system.questKeywords;
     for (var i = 0; i < qk.length; i++) {
       var kw = qk[i];
       if (kw === '任务') {
         // 裸"任务"只认"任务：/任务！"等发布形态，防"任务进度更新"误判
-        if (/^任务[:：!！]/.test(inner)) { return true; }
-      } else if (inner.indexOf(kw) === 0) {
+        if (/^任务[:：!！]/.test(t)) { return true; }
+      } else if (t.indexOf(kw) === 0) {
         return true;
       }
     }
-    if (/任务$/.test(inner)) { return true; }
+    if (/任务$/.test(t)) { return true; }
     return false;
   }
 
@@ -304,7 +318,7 @@
     var i = 0;
     var n = lines.length;
 
-    function buildPanelBlock(cls, rows, startLine, endLine) {
+    function buildPanelBlock(cls, rows, startLine, endLine, bracketed) {
       var fields = [];
       var descLines = [];
       var rowKinds = [];
@@ -342,6 +356,7 @@
         fields: fields,
         descLines: descLines,
         rowKinds: rowKinds,
+        bracketed: bracketed !== false, // 原文名称行是否带【】（独立名称行形态不带）
         startLine: startLine,
         endLine: endLine
       };
@@ -370,6 +385,10 @@
         } else if (isYesNoLine(line)) {
           options.push(line);
           rowKinds.push('option');
+        } else if (kind === 'quest' && contentLines.length < 3 && isShortNameLine(line)) {
+          // quest 可吞"任务名短行"（"左大臣的藏品"），防叙述行污染
+          contentLines.push(line);
+          rowKinds.push('line');
         } else {
           break; // 普通叙述行：结束大框
         }
@@ -401,6 +420,7 @@
 
         if (cls.kind === 'panel-head' || cls.kind === 'skill') {
           // 收集标题后的连续内容行（字段行 / 描述行），行序经 rowKinds 保留
+          // 面板：首行必须字段行（防"获得提示+名称行"形态被吞）；技能面板：允许描述行开头
           var rows = [];
           var j2 = i + 1;
           while (j2 < n) {
@@ -410,6 +430,8 @@
             var m2 = FIELD_RE.exec(l2);
             if (m2) {
               rows.push({ kind: 'field', label: trim(m2[1]), value: trim(m2[3]), sep: m2[2] });
+            } else if (rows.length === 0 && cls.kind !== 'skill') {
+              break; // 面板：标题后首行必须字段行
             } else {
               rows.push({ kind: 'line', text: l2 });
             }
@@ -546,6 +568,34 @@
             continue;
           }
         }
+      }
+
+      // ---- 独立名称行 + 字段行（"破旧的燧发枪（白色）" + 字段，获得提示后常见形态）----
+      var nameLineM = CFG.panel.nameLineRegex.exec(line);
+      if (nameLineM) {
+        var nRows = [];
+        var nj = i + 1;
+        while (nj < n) {
+          var nl = trim(lines[nj]);
+          if (nl === '' || isBlockEndLine(nl)) { break; }
+          if (nRows.length >= CFG.panel.maxFieldLines) { break; }
+          var nm = FIELD_RE.exec(nl);
+          if (!nm) { break; } // 名称行后只接字段行（不吞描述/叙述）
+          nRows.push({ kind: 'field', label: trim(nm[1]), value: trim(nm[3]), sep: nm[2] });
+          nj++;
+        }
+        if (nRows.length >= CFG.panel.minFieldLines) {
+          var nameCls = { kind: 'panel-head', name: nameLineM[1], rarity: null, color: null };
+          var nameRar = parseRarity(nameLineM[0]);
+          if (nameRar) {
+            nameCls.rarity = nameRar.rarity;
+            nameCls.color = nameRar.color;
+          }
+          blocks.push(buildPanelBlock(nameCls, nRows, i, nj - 1, false)); // 独立名称行：不带【】
+          i = nj;
+          continue;
+        }
+        // 字段不足 → 落到后续分支（value / 普通行）
       }
 
       // ---- 数值增减行 ----

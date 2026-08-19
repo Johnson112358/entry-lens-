@@ -1,0 +1,27 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "获得斩龙闪",
+      "fields": [],
+      "options": []
+    },
+    {
+      "type": "panel",
+      "name": "斩龙闪",
+      "rarity": "白色",
+      "rarityColor": "#C0C0C0",
+      "fields": [
+        {
+          "label": "产地",
+          "value": "海贼王，钢铁熔炉铁匠铺"
+        },
+        {
+          "label": "耐久度",
+          "value": "35/40-5（此武器曾受到严重破损，耐久度-5。）"
+        }
+      ]
+    }
+  ]
+}

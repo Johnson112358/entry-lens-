@@ -138,7 +138,12 @@
       } else {
         nameHtml = nameIsSentence ? bold(nameHtml) : underline(nameHtml);
       }
-      out.push('【' + nameHtml + esc(rarityPart) + '】');
+      if (block.bracketed === false) {
+        // 独立名称行（原文无【】）：破旧的燧发枪（白色）
+        out.push(nameHtml + esc(rarityPart));
+      } else {
+        out.push('【' + nameHtml + esc(rarityPart) + '】');
+      }
     }
 
     // 内容行按原始行序渲染（rowKinds 保序）：字段行分级 + 描述行原样；行间 <br> 换行

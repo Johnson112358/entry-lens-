@@ -23,7 +23,7 @@ aliases: {
 '蓝': '蓝色', '蓝色': '蓝色', '稀有': '蓝色', '罕见': '蓝色', '珍稀': '蓝色', '高级': '蓝色', '上品': '蓝色',
 '紫': '紫色', '紫色': '紫色', '暗紫色': '紫色', '史诗': '紫色', '史诗级': '紫色', '极品': '紫色', '完美': '紫色', '完美级': '紫色', '珍宝': '紫色', '绝品': '紫色',
 '橙': '橙色', '橙色': '橙色', '传说': '橙色', '传说级': '橙色', '传奇': '橙色', '绝世': '橙色', '神器': '橙色', '仙品': '橙色', '金色': '橙色', '淡金色': '橙色', '暗金色': '橙色',
-'红': '红色', '红色': '红色', '神话': '红色', '超神': '红色', '神品': '红色', '禁忌': '红色'
+'红': '红色', '红色': '红色', '神话': '红色', '超神': '红色', '神品': '红色', '禁忌': '红色', '唯一': '红色'
 }
 },
 panel: {
@@ -49,10 +49,11 @@ attrWords: [
 maxFieldLines: 12,
 minFieldLines: 2,
 skillTitleRegex: /^【[\u4e00-\u9fa5A-Za-z0-9 ]{1,12}[:：][Ll][Vv]\.?\d+[^】]*】$/,
-nameTitleRegex: /^【([^】:：]+)】$/
+nameTitleRegex: /^【([^】:：]+)】$/,
+nameLineRegex: /^([^:：。【】！？!?，,、；;]{2,16})（([^（）]{1,6})）$/
 },
 system: {
-questKeywords: ['支线任务', '主线任务', '每日任务', '每周任务', '隐藏任务', '活动任务', '任务'],
+questKeywords: ['支线任务', '主线任务', '每日任务', '每周任务', '隐藏任务', '活动任务', '特殊任务', '悬赏任务', '赏金任务', '传承任务', '进阶任务', '任务'],
 choiceKeywords: ['你可在以下奖励中', '请在以下奖励中', '请在以下选项', '请选择以下', '请选择', '选择其一', '获得以下奖励', '奖励如下', '可选择', '奖励列表', '请做出选择', '二选一', '三选一'],
 confirmKeywords: ['是/否', '是否', '确认', '激活', '启动'],
 promptKeywords: ['提示', '系统提示', '公告', '警告'],
@@ -129,6 +130,11 @@ return CFG.system.optionLineRegex.test(line);
 function isYesNoLine(line) {
 return CFG.system.yesNoLineRegex.test(line);
 }
+function isShortNameLine(line) {
+if (!/^[^:：。，！？!?…、；;]{2,16}$/.test(line)) { return false; }
+if (/^(他|她|我|你|他们|她们|你们|苏晓|林风)/.test(line)) { return false; }
+return true;
+}
 function inArray(arr, v) {
 return arr.indexOf(v) !== -1;
 }
@@ -153,19 +159,23 @@ if (t.indexOf(k) !== -1 && (bestKey === null || k.length > bestKey.length)) {
 bestKey = k;
 }
 }
-if (bestKey === null) { return null; }
+if (bestKey !== null) {
 var rarity = aliases[bestKey];
 return { rarity: rarity, color: CFG.rarity.colors[rarity] || null };
+}
+var parts = t.split(/[？?、，,·~～]/);
+for (var p = 0; p < parts.length; p++) {
+var a = aliases[parts[p]];
+if (a) {
+return { rarity: a, color: CFG.rarity.colors[a] || null };
+}
+}
+return null;
 }
 function parseRarity(text) {
 var m = /（([^（）]{1,6})）$/.exec(trim(text));
 if (!m) { return null; }
-var alias = CFG.rarity.aliases[m[1]];
-if (!alias) { return null; }
-return {
-rarity: alias,
-color: CFG.rarity.colors[alias] || null
-};
+return parseRarityText(m[1]);
 }
 function classifyBracketLine(line) {
 var m = /^【([^】]*)】$/.exec(trim(line));
@@ -219,16 +229,18 @@ if (inner.indexOf(punct.charAt(p)) !== -1) { return true; }
 return false;
 }
 function isQuestTitle(inner) {
+var t = inner;
+if (t.indexOf('触发') === 0) { t = t.slice(2); }
 var qk = CFG.system.questKeywords;
 for (var i = 0; i < qk.length; i++) {
 var kw = qk[i];
 if (kw === '任务') {
-if (/^任务[:：!！]/.test(inner)) { return true; }
-} else if (inner.indexOf(kw) === 0) {
+if (/^任务[:：!！]/.test(t)) { return true; }
+} else if (t.indexOf(kw) === 0) {
 return true;
 }
 }
-if (/任务$/.test(inner)) { return true; }
+if (/任务$/.test(t)) { return true; }
 return false;
 }
 var ABBR_SET = (function () {
@@ -326,7 +338,7 @@ var blocks = [];
 var lines = String(text).split('\n');
 var i = 0;
 var n = lines.length;
-function buildPanelBlock(cls, rows, startLine, endLine) {
+function buildPanelBlock(cls, rows, startLine, endLine, bracketed) {
 var fields = [];
 var descLines = [];
 var rowKinds = [];
@@ -363,6 +375,7 @@ rarityColor: rarityColor,
 fields: fields,
 descLines: descLines,
 rowKinds: rowKinds,
+bracketed: bracketed !== false, // 原文名称行是否带【】（独立名称行形态不带）
 startLine: startLine,
 endLine: endLine
 };
@@ -387,6 +400,9 @@ rowKinds.push('option');
 } else if (isYesNoLine(line)) {
 options.push(line);
 rowKinds.push('option');
+} else if (kind === 'quest' && contentLines.length < 3 && isShortNameLine(line)) {
+contentLines.push(line);
+rowKinds.push('line');
 } else {
 break; // 普通叙述行：结束大框
 }
@@ -421,6 +437,8 @@ if (rows.length >= CFG.panel.maxFieldLines) { break; }
 var m2 = FIELD_RE.exec(l2);
 if (m2) {
 rows.push({ kind: 'field', label: trim(m2[1]), value: trim(m2[3]), sep: m2[2] });
+} else if (rows.length === 0 && cls.kind !== 'skill') {
+break; // 面板：标题后首行必须字段行
 } else {
 rows.push({ kind: 'line', text: l2 });
 }
@@ -544,6 +562,31 @@ continue;
 }
 }
 }
+var nameLineM = CFG.panel.nameLineRegex.exec(line);
+if (nameLineM) {
+var nRows = [];
+var nj = i + 1;
+while (nj < n) {
+var nl = trim(lines[nj]);
+if (nl === '' || isBlockEndLine(nl)) { break; }
+if (nRows.length >= CFG.panel.maxFieldLines) { break; }
+var nm = FIELD_RE.exec(nl);
+if (!nm) { break; } // 名称行后只接字段行（不吞描述/叙述）
+nRows.push({ kind: 'field', label: trim(nm[1]), value: trim(nm[3]), sep: nm[2] });
+nj++;
+}
+if (nRows.length >= CFG.panel.minFieldLines) {
+var nameCls = { kind: 'panel-head', name: nameLineM[1], rarity: null, color: null };
+var nameRar = parseRarity(nameLineM[0]);
+if (nameRar) {
+nameCls.rarity = nameRar.rarity;
+nameCls.color = nameRar.color;
+}
+blocks.push(buildPanelBlock(nameCls, nRows, i, nj - 1, false)); // 独立名称行：不带【】
+i = nj;
+continue;
+}
+}
 var v = analyzeValueLine(line);
 if (v.hit) {
 blocks.push({
@@ -660,7 +703,11 @@ nameHtml = font(block.rarityColor, nameIsSentence ? bold(nameHtml) : bold(underl
 } else {
 nameHtml = nameIsSentence ? bold(nameHtml) : underline(nameHtml);
 }
+if (block.bracketed === false) {
+out.push(nameHtml + esc(rarityPart));
+} else {
 out.push('【' + nameHtml + esc(rarityPart) + '】');
+}
 }
 var fi = 0;
 var li = 0;

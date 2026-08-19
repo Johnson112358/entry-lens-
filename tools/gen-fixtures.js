@@ -122,8 +122,9 @@ CASES.push(
   },
   {
     cat: 'panel', name: '12-equip-desc-mixed',
-    input: '【骑士头盔（橙色）】\n一顶饱经战火的骑士头盔。\n防御力：60\n耐久度：45/45\n不可交易',
+    input: '【骑士头盔（橙色）】\n防御力：60\n一顶饱经战火的骑士头盔。\n耐久度：45/45\n不可交易',
     expected: {
+      // 描述行夹在字段行之间（真实形态：标题后首行必须字段行）
       blocks: [{ type: 'panel', name: '骑士头盔', rarity: '橙色', rarityColor: '#E67E22', fields: [
         { label: '防御力', value: '60' }, { label: '耐久度', value: '45/45' }
       ] }]
@@ -822,6 +823,50 @@ CASES.push(
       blocks: [{ type: 'panel', fields: [
         { label: '智力', value: '80（真实属性·主属性）' }, { label: '魅力', value: '8' }, { label: '幸运', value: '3' }, { label: '杀戮天赋', value: '噬灵者（S）' }
       ] }]
+    }
+  },
+  {
+    cat: 'novel', name: '11-get-equip-name-line',
+    input: '【获得，破旧的燧发枪（白色）】\n破旧的燧发枪（白色）\n产地：海贼王，利奥波特作坊\n耐久度：6/30\n攻击力：2~13（根据距离计算）',
+    expected: {
+      // 获得提示 + 独立名称行 + 字段（《轮回乐园》装备标准形态）
+      blocks: [
+        { type: 'system', subType: 'prompt', title: '获得，破旧的燧发枪（白色）', fields: [], options: [] },
+        { type: 'panel', name: '破旧的燧发枪', rarity: '白色', rarityColor: '#C0C0C0', fields: [
+          { label: '产地', value: '海贼王，利奥波特作坊' }, { label: '耐久度', value: '6/30' }, { label: '攻击力', value: '2~13（根据距离计算）' }
+        ] }
+      ]
+    }
+  },
+  {
+    cat: 'novel', name: '12-get-equip-mixed-rarity',
+    input: '【获得斩龙闪】\n斩龙闪（白色?稀有）\n产地：海贼王，钢铁熔炉铁匠铺\n耐久度：35/40-5（此武器曾受到严重破损，耐久度-5。）',
+    expected: {
+      // "白色?稀有" 拆段取第一档
+      blocks: [
+        { type: 'system', subType: 'prompt', title: '获得斩龙闪', fields: [], options: [] },
+        { type: 'panel', name: '斩龙闪', rarity: '白色', rarityColor: '#C0C0C0', fields: [
+          { label: '产地', value: '海贼王，钢铁熔炉铁匠铺' }, { label: '耐久度', value: '35/40-5（此武器曾受到严重破损，耐久度-5。）' }
+        ] }
+      ]
+    }
+  },
+  {
+    cat: 'novel', name: '13-special-quest',
+    input: '【特殊任务：抉择】\n难度等级：？？？\n任务简介：将【世界树指环】交与轮回乐园。\n任务信息：无',
+    expected: {
+      blocks: [{ type: 'system', subType: 'quest', title: '特殊任务：抉择', fields: [
+        { label: '难度等级', value: '？？？' }, { label: '任务简介', value: '将【世界树指环】交与轮回乐园。' }, { label: '任务信息', value: '无' }
+      ], options: [] }]
+    }
+  },
+  {
+    cat: 'novel', name: '14-trigger-quest',
+    input: '【触发支线任务：左大臣的藏品】\n左大臣的藏品\n难度等级：lv.2。\n任务简介：左大臣的藏品非常丰富，一切有价值的藏品，都会被这贪婪的老家伙看中。',
+    expected: {
+      blocks: [{ type: 'system', subType: 'quest', title: '触发支线任务：左大臣的藏品', fields: [
+        { label: '难度等级', value: 'lv.2。' }, { label: '任务简介', value: '左大臣的藏品非常丰富，一切有价值的藏品，都会被这贪婪的老家伙看中。' }
+      ], options: [] }]
     }
   }
 );

@@ -1,0 +1,20 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "quest",
+      "title": "触发支线任务：左大臣的藏品",
+      "fields": [
+        {
+          "label": "难度等级",
+          "value": "lv.2。"
+        },
+        {
+          "label": "任务简介",
+          "value": "左大臣的藏品非常丰富，一切有价值的藏品，都会被这贪婪的老家伙看中。"
+        }
+      ],
+      "options": []
+    }
+  ]
+}

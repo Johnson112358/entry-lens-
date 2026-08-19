@@ -1,0 +1,31 @@
+{
+  "blocks": [
+    {
+      "type": "system",
+      "subType": "prompt",
+      "title": "获得，破旧的燧发枪（白色）",
+      "fields": [],
+      "options": []
+    },
+    {
+      "type": "panel",
+      "name": "破旧的燧发枪",
+      "rarity": "白色",
+      "rarityColor": "#C0C0C0",
+      "fields": [
+        {
+          "label": "产地",
+          "value": "海贼王，利奥波特作坊"
+        },
+        {
+          "label": "耐久度",
+          "value": "6/30"
+        },
+        {
+          "label": "攻击力",
+          "value": "2~13（根据距离计算）"
+        }
+      ]
+    }
+  ]
+}
